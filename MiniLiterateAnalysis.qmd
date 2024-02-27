@@ -1,0 +1,66 @@
+---
+title: "Mini Literate Analysis"
+format: html
+editor_options: 
+  chunk_output_type: console
+---
+
+## INTRODUCTION
+
+### About the data
+
+This data set includes diverse measurements of seawater chemistry along with supporting conductivity, temperature, and depth (CTD) data from the Arctic Ocean near the North Pole. Measurements were taken from sea ice platforms each April or May from 2000-2014.
+
+This data was downloeaded from the [Arctic Data Center](https://arcticdata.io/catalog/view/doi:10.18739/A25T3FZ8X).
+
+### Setup
+
+Here, you want to upload all the libraries of interest
+
+```{r}
+library(readr)
+```
+
+### Read data
+
+```{r}
+bg_chem<-read_csv("data/BGchem2008data.csv")
+```
+
+Exploring data and structure of the data:
+
+```{r}
+summary(bg_chem)
+```
+
+
+## ANALYSES
+
+### Calculate summary stats
+
+```{r}
+nitate<-mean(bg_chem$NO3)
+nitrate<-mean(bg_chem$NO2)
+amm<-mean(bg_chem$NH4)
+phos<-mean(bg_chem$P)
+```
+
+### Calculate the mean Readfield Ratio
+
+```{r}
+ratio<-(nitate+nitrate+amm)/phos # I'm creating a ratio (trhis appears in the render)
+```
+
+### Plot ratio
+<!--This is a comment that is not going to be rendered -->
+
+```{r}
+plot(bg_chem$P,bg_chem$NO3 + bg_chem$NO2 + bg_chem$NH4)
+```
+
+
+## CONCLUSIONS
+
+The Redfield ratio is `r round(ratio, 2)`.
+
+

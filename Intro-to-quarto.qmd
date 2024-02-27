@@ -1,0 +1,60 @@
+---
+title: "IntroToQuarto"
+author: "MPB"
+format: html
+bibliography: references.bib
+---
+
+# Header 1
+
+## Header 2
+
+##### Header 5
+
+**this is bold**
+
+*this is italic*
+
+-   item 1
+-   item 2
+-   item 3
+
+Find the workshop material at [this link](https://learning.nceas.ucsb.edu/2024-02-arctic/session_03.html).
+
+```{r}
+
+a<-1:10
+
+b<-1:10
+
+plot(a,b)
+```
+
+This is a very important fact [@petitbon2023]
+
+| Col1        | Col2     | Col3        |
+|-------------|----------|-------------|
+| Ciao        | Hi/Hello | Hola        |
+| Arrivederci | Goodbye  | Hasta luego |
+| Nome        | Name     | Nombre      |
+
+
+
+```{r}
+x<-4*8
+y<-c(4,6,8,10)
+y
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
