@@ -1,0 +1,173 @@
+---
+title: "Wrangling"
+author: "MPB"
+format: html
+---
+
+## Load packages of interest
+
+```{r}
+#| message: false # this is to suppress warning messages
+library(dplyr)
+library(tidyr)
+library(readr)
+```
+
+## Read in our data
+
+```{r}
+catch_original<-read_csv("https://knb.ecoinformatics.org/knb/d1/mn/v2/object/df35b.302.1")
+```
+
+## Explore
+
+```{r}
+colnames(catch_original)
+head(catch_original)
+summary(catch_original)
+unique(catch_original$Year)
+```
+
+## Clean and reshape data
+
+```{r}
+catch_data<-catch_original %>%
+  select(Region, Year, Chinook, Sockeye, Coho, Pink, Chum)
+head(catch_data)
+
+catch_data<-catch_original %>%
+  select(-All, -notesRegCode)
+head(catch_data)
+```
+
+## Check column type
+
+```{r}
+glimpse(catch_data)
+```
+
+## Replace values in a column (and make needed correction)
+
+```{r}
+catch_clean<-catch_data %>%
+  mutate(Chinook=as.numeric(Chinook))
+```
+
+```{r}
+is.na(catch_clean$Chinook)
+i<-which(is.na(catch_clean$Chinook))
+i
+catch_data[i,]
+
+catch_clean<-catch_data %>%
+  mutate(Chinook=if_else(condition=Chinook=="I",
+                         true="1", false=Chinook),
+         Chinook=as.numeric(Chinook))
+catch_clean[i,]
+```
+
+## Reshaping
+
+```{r}
+head(catch_clean)
+catch_long<-catch_clean %>%
+  pivot_longer(cols=-c(Region,Year),
+               names_to = "species",
+               values_to = "catch")
+head(catch_long)
+```
+
+```{r}
+head(catch_long)
+catch_wide<-catch_long %>%
+  pivot_wider(names_from = "species",
+               values_from = "catch")
+head(catch_wide)
+```
+
+## Rename columns
+
+```{r}
+catch_long<-catch_long %>%
+  rename(catch_thousands=catch)
+head(catch_long)
+```
+
+```{r}
+catch_long<-catch_long %>%
+  mutate(catch=catch_thousands*1000)
+head(catch_long)
+```
+
+## Summary stats
+
+```{r}
+# get the average catch by region
+mean_region<-catch_long %>%
+  group_by(Region) %>%
+  summarize(mean_catch=mean(catch))
+head(mean_region)
+
+# get the number of row by region
+nrow_region<-catch_long %>%
+  group_by(Region) %>%
+  summarize(nrow=n())
+head(nrow_region)
+```
+
+## Filter specific rows
+
+```{r}
+sse_catch<-catch_long %>%
+  filter(Region == "SSE")
+head(sse_catch)
+
+over1m_catch<-catch_long %>%
+  filter(catch > 1000000)
+head(over1m_catch)
+
+```
+
+## Sorting data
+
+```{r}
+mean_region<-catch_long %>%
+  group_by(Region) %>%
+  summarize(mean_catch=mean(catch)) %>%
+  arrange(mean_catch)
+head(mean_region)
+
+mean_region<-catch_long %>%
+  group_by(Region) %>%
+  summarize(mean_catch=mean(catch)) %>%
+  arrange(desc(mean_catch))
+head(mean_region)
+```
+
+## Split and combine values in columns
+
+```{r}
+site_df<-data.frame(site=c("HAW-101",
+                           "HAW-103",
+                           "OAH-320",
+                           "OAH-219",
+                           "MAU-039"))
+head(site_df)
+
+split_df<-site_df %>%
+  separate(site, c("island","site_number"), "-")
+head(split_df)
+
+
+date_df<-data.frame(
+  year=c("1930","1930","1930"),
+  month=c("12","12","12"),
+  day=c("14","15","16")
+)
+date_df
+
+date_unite<-date_df %>%
+  unite(date, year, month, day, sep="-")
+date_unite
+```
+
