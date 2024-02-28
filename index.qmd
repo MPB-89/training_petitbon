@@ -3,4 +3,12 @@ title: "GitHub Pages Example"
 format: html
 ---
 
-Hello world!!
+## Course lessons
+- [Literate analysis](MiniLiterateAnalysis.html)
+- [Cleaning and wrangling](tidying-data.html)
+- Data visualization
+- Functions and packages
+
+## Course practice section
+- Practice 1
+- Practice 2
