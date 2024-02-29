@@ -32,6 +32,36 @@ egg_measurements <- read_csv("https://arcticdata.io/metacat/d1/mn/v2/object/urn%
 ```
 
 ```{r}
-
+summary(predator_surveys)
+glimpse(predator_surveys)
+summary(nests)
+glimpse(nests)
+summary(egg_measurements)
+glimpse(egg_measurements)
 ```
+
+```{r}
+summary(species)
+unique(predator_surveys$species)
+help(left_join)
+predator_surveys_commonN<-left_join(x=predator_surveys,y=species,by=c("species"="alpha_code"))
+summary(predator_surveys_commonN)
+```
+
+```{r}
+Join_DF_with_species<-function(First_DF,species){
+  x<-left_join(First_DF,species,by=c("species"="alpha_code"))
+  return(x)
+}
+nests_commonN<-Join_DF_with_species(nests,species)
+summary(nests_commonN)
+colnames(nests_commonN); colnames(nests)
+```
+
+
+
+
+
+
+
 
